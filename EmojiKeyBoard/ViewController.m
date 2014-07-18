@@ -24,12 +24,12 @@
   self.view.backgroundColor = [UIColor grayColor];
   self.textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 60, 320, 200)];
   self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-  AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 245) dataSource:self];
-  emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+  AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
+//  emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+  
   emojiKeyboardView.delegate = self;
   [self.view addSubview:self.textView];
   self.textView.inputView = emojiKeyboardView;
-  self.textView.inputAccessoryView = emojiKeyboardView;
 }
 
 
