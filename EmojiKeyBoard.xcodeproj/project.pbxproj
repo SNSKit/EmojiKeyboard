@@ -632,6 +632,7 @@
 				61B1CD511977E1B2002101D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		61B1CD521977E1B2002101D8 /* Build configuration list for PBXNativeTarget "EmojiKeyBoardTests" */ = {
 			isa = XCConfigurationList;
@@ -640,6 +641,7 @@
 				61B1CD541977E1B2002101D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

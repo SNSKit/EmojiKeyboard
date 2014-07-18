@@ -25,36 +25,20 @@
   self.textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 60, 320, 200)];
   self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
   AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 245) dataSource:self];
+  emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
   emojiKeyboardView.delegate = self;
   [self.view addSubview:self.textView];
   self.textView.inputView = emojiKeyboardView;
+  self.textView.inputAccessoryView = emojiKeyboardView;
 }
+
 
 - (void)emojiKeyBoardView:(AGEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji {
   self.textView.text = [self.textView.text stringByAppendingString:emoji];
 }
 
-
-//http://www.cocoachina.com/bbs/read.php?tid=213384
-//http://stackoverflow.com/questions/11750450/how-to-delete-one-emoji-in-nsstring
-//http://www.raywenderlich.com/forums/viewtopic.php?f=2&t=9562
-//http://www.apkbus.com/android-125998-1-1.html
 - (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)emojiKeyBoardView {
-  if (self.textView.text.length >=2) {
-    NSRange cursorPosition = [self.textView selectedRange];
-    NSInteger index = cursorPosition.location;
-    if (index == self.textView.text.length) {
-      self.textView.text = [self.textView.text substringToIndex:index - 2];
-    }else{
-      NSString *leftStr = [self.textView.text substringToIndex:index];
-      NSString *rightStr = [self.textView.text substringFromIndex:index];
-      if (leftStr.length>=2) {
-        leftStr = [leftStr substringToIndex:index - 2];
-        self.textView.text = [leftStr stringByAppendingString:rightStr];
-        self.textView.selectedRange = NSMakeRange(index - 2, 0);
-      }
-    }
-  }
+  [self.textView deleteBackward];
 }
 
 - (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)emojiKeyboardView imageForSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
