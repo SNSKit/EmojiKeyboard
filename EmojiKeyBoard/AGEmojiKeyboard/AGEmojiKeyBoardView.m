@@ -42,6 +42,24 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 
 @implementation AGEmojiKeyboardView
 
+//_bottomImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 100, 320, 29)];
+//_bottomImageView.image = [UIImage imageNamed:@"tab_bg"];
+//
+//
+//_leftImage = [UIImage imageNamed:@"corner_left"];
+//UIEdgeInsets leftInset = UIEdgeInsetsMake(0,0,0,113);
+//_leftImage = [_leftImage resizableImageWithCapInsets:leftInset resizingMode:UIImageResizingModeStretch];
+//_leftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 120, 29)];
+//_leftImageView.image = _leftImage;
+//[_bottomImageView addSubview:_leftImageView];
+//
+//_rightImage = [UIImage imageNamed:@"corner_right"];
+//UIEdgeInsets rightInset = UIEdgeInsetsMake(0,173,0,0);
+//_rightImage = [_rightImage resizableImageWithCapInsets:rightInset resizingMode:UIImageResizingModeStretch];
+//UIImageView *rightImageView = [[UIImageView alloc] initWithFrame:CGRectMake(140, 0, 180, 29)];
+//rightImageView.image = _rightImage;
+//[_bottomImageView addSubview:rightImageView];
+
 #pragma mark - View Related Methods
 
 - (instancetype)initWithFrame:(CGRect)frame dataSource:(id<AGEmojiKeyboardViewDataSource>)dataSource {
