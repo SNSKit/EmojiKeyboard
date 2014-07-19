@@ -30,6 +30,11 @@ backSpaceButtonImage:(UIImage *)backSpaceButtonImage
                rows:(NSUInteger)rows
             columns:(NSUInteger)columns;
 
+- (id)initWithFrame:(CGRect)frame
+         buttonSize:(CGSize)buttonSize
+               rows:(NSUInteger)rows
+            columns:(NSUInteger)columns;
+
 /**
  Sets texts on buttons in the EmojiPageView.
 

@@ -41,10 +41,10 @@
       [button setTitle:buttonTexts[i] forState:UIControlStateNormal];
       [self addToViewButton:button];
     }
-    UIButton *button = [self createButtonAtIndex:self.rows * self.columns - 1];
-    [button setImage:self.backSpaceButtonImage forState:UIControlStateNormal];
-    button.tag = BACKSPACE_BUTTON_TAG;
-    [self addToViewButton:button];
+//    UIButton *button = [self createButtonAtIndex:self.rows * self.columns - 1];
+//    [button setImage:self.backSpaceButtonImage forState:UIControlStateNormal];
+//    button.tag = BACKSPACE_BUTTON_TAG;
+//    [self addToViewButton:button];
   }
 }
 
@@ -103,13 +103,27 @@ backSpaceButtonImage:(UIImage *)backSpaceButtonImage
   return self;
 }
 
-- (void)emojiButtonPressed:(UIButton *)button {
-  if (button.tag == BACKSPACE_BUTTON_TAG) {
-    NSLog(@"Back space pressed");
-    [self.delegate emojiPageViewDidPressBackSpace:self];
-    return;
+- (id)initWithFrame:(CGRect)frame
+         buttonSize:(CGSize)buttonSize
+               rows:(NSUInteger)rows
+            columns:(NSUInteger)columns {
+  self = [super initWithFrame:frame];
+  if (self) {
+    _buttonSize = buttonSize;
+    _columns = columns;
+    _rows = rows;
+    _buttons = [[NSMutableArray alloc] initWithCapacity:rows * columns];
   }
-  NSLog(@"%@", button.titleLabel.text);
+  return self;
+}
+
+- (void)emojiButtonPressed:(UIButton *)button {
+//  if (button.tag == BACKSPACE_BUTTON_TAG) {
+//    NSLog(@"Back space pressed");
+//    [self.delegate emojiPageViewDidPressBackSpace:self];
+//    return;
+//  }
+//  NSLog(@"%@", button.titleLabel.text);
   [self.delegate emojiPageView:self didUseEmoji:button.titleLabel.text];
 }
 
