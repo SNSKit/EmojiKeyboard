@@ -91,10 +91,6 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     _segmentImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     [self addSubview:_segmentImageView];
-    NSLog(@"self:%@",NSStringFromCGRect(self.bounds));
-    NSLog(@"scroll:%@",NSStringFromCGRect(self.scrollView.frame));
-    NSLog(@"page:%@",NSStringFromCGRect(self.pageControl.frame));
-    NSLog(@"seg:%@",NSStringFromCGRect(self.segmentImageView.frame));
   }
   return self;
 }
@@ -102,7 +98,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 - (void)layoutSubviews {
   CGSize pageControlSize = [self.pageControl sizeForNumberOfPages:3];
   NSUInteger numberOfPages = [self numberOfPagesForCategory:self.category
-                                              inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - kBarHeight - pageControlSize.height)];
+                                              inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - CGRectGetHeight(_segmentImageView.bounds) - pageControlSize.height)];
 
   NSInteger currentPage = (self.pageControl.currentPage > numberOfPages) ? numberOfPages : self.pageControl.currentPage;
   self.pageControl.numberOfPages = numberOfPages;
@@ -112,7 +108,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
                                                    pageControlSize.height));
 
   self.scrollView.frame = CGRectMake(0,CGRectGetHeight(self.pageControl.bounds),CGRectGetWidth(self.bounds),
-                                   CGRectGetHeight(self.bounds) - kBarHeight - pageControlSize.height);
+                                   CGRectGetHeight(self.bounds) - CGRectGetHeight(_segmentImageView.bounds) - pageControlSize.height);
   [self.scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
   self.scrollView.contentOffset = CGPointMake(CGRectGetWidth(self.scrollView.bounds) * currentPage, 0);
   self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.scrollView.bounds) * numberOfPages, CGRectGetHeight(self.scrollView.bounds));
