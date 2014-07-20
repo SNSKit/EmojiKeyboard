@@ -10,7 +10,7 @@
 #import "CustomImageView.h"
 
 static const CGFloat ButtonWidth = 45;
-static const CGFloat ButtonHeight = 37;
+static const CGFloat ButtonHeight = 50;
 static const NSUInteger DefaultRecentEmojisMaintainedCount = 50;
 static const CGFloat RecentLabelWidth = 150;
 static const CGFloat RecentLabelFontSize = 12.0;
@@ -84,6 +84,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     _segmentImageView.buttonNormalImages = @[@"recent_n",@"face_n",@"bell_n",@"flower_n",@"car_n",@"characters_n",@"backspace_n"];
     _segmentImageView.buttonSelectedImages = @[@"recent_s",@"face_s",@"bell_s",@"flower_s",@"car_s",@"characters_s"];
     [_segmentImageView initButtonsWithImageArray:_segmentImageView.buttonNormalImages];
+    _segmentImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     [self addSubview:_segmentImageView];
     NSLog(@"self:%@",NSStringFromCGRect(self.bounds));
@@ -325,20 +326,16 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     _recentLabel.textColor = [UIColor lightGrayColor];
     _recentLabel.textAlignment = NSTextAlignmentCenter;
     _recentLabel.text = @"最近使用的类别";
+    [self addSubview:_recentLabel];
   });
   
   if ([category isEqualToString:segmentRecentName]) {
-    if ([self.subviews containsObject:_recentLabel]) {
-      return 1;
-    }else{
-      [self addSubview:_recentLabel];
-      return 1;
+    _recentLabel.hidden = NO;
+    return 1;
     }
-    
-  }
-  if ([self.subviews containsObject:_recentLabel]) {
-    [_recentLabel removeFromSuperview];
-  }
+  
+  _recentLabel.hidden = YES;
+
   NSUInteger emojiCount = [[self emojiListForCategory:category] count];
   NSUInteger numberOfRows = [self numberOfRowsForFrameSize:frameSize];
   NSUInteger numberOfColumns = [self numberOfColumnsForFrameSize:frameSize];

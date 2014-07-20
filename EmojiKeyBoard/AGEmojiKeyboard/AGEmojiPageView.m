@@ -71,7 +71,7 @@
 
 - (CGFloat)YMarginForButtonInRow:(NSInteger)rowNumber {
   CGFloat padding = ((CGRectGetHeight(self.bounds) - self.rows * self.buttonSize.height) / self.rows);
-  return (padding / 2 + rowNumber * (padding + self.buttonSize.height));
+  return (padding / 2 + rowNumber * (padding + self.buttonSize.height)) - 8;
 }
 
 - (UIButton *)createButtonAtIndex:(NSUInteger)index {
