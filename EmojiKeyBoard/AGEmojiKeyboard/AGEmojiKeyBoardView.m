@@ -12,6 +12,8 @@
 static const CGFloat ButtonWidth = 45;
 static const CGFloat ButtonHeight = 37;
 static const NSUInteger DefaultRecentEmojisMaintainedCount = 50;
+static const CGFloat RecentLabelWidth = 150;
+static const CGFloat RecentLabelFontSize = 12.0;
 
 static NSString *const segmentRecentName = @"Recent";
 NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
@@ -25,6 +27,8 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 @property (nonatomic) NSMutableArray *pageViews;
 @property (nonatomic) NSString *category;
 
+@property (nonatomic,strong)UILabel *recentLabel;
+
 @property (nonatomic,strong) CustomImageView *segmentImageView;
 
 @end
@@ -36,6 +40,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 - (instancetype)initWithFrame:(CGRect)frame dataSource:(id<AGEmojiKeyboardViewDataSource>)dataSource {
   self = [super initWithFrame:frame];
   if (self) {
+    self.backgroundColor = [UIColor colorWithRed:(float)240/255 green:(float)240/255 blue:(float)240/255 alpha:1.0];
     _dataSource = dataSource;
     
     self.category = [self categoryNameAtIndex:self.defaultSelectedCategory];
@@ -52,13 +57,12 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     self.pageControl.numberOfPages = numberOfPages;
     pageControlSize = [self.pageControl sizeForNumberOfPages:numberOfPages];
     //重设frame,使其为整数避免产生模糊效果
-    self.pageControl.frame = CGRectIntegral(CGRectMake((CGRectGetWidth(self.bounds) - pageControlSize.width) / 2,
-                                                       CGRectGetHeight(self.bounds) - pageControlSize.height,
+    self.pageControl.frame = CGRectIntegral(CGRectMake((CGRectGetWidth(self.bounds) - pageControlSize.width) / 2,0,
                                                        pageControlSize.width,
                                                        pageControlSize.height));
     [self.pageControl addTarget:self action:@selector(pageControlTouched:) forControlEvents:UIControlEventValueChanged];
-      self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-      self.pageControl.currentPageIndicatorTintColor = [UIColor darkGrayColor];
+    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    self.pageControl.currentPageIndicatorTintColor = [UIColor darkGrayColor];
       
     [self addSubview:_pageControl];
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,
@@ -70,8 +74,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.delegate = self;
     [self addSubview:self.scrollView];
-    self.scrollView.backgroundColor = [UIColor colorWithRed:(float)240/255 green:(float)240/255 blue:(float)240/255 alpha:1.0];
-    _segmentImageView = [[CustomImageView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.pageControl.bounds) + CGRectGetHeight(self.scrollView.bounds), kScreenWidth, kBarHeight)];
+    _segmentImageView = [[CustomImageView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.pageControl.bounds) + CGRectGetHeight(self.scrollView.bounds), CGRectGetWidth(self.bounds), kBarHeight)];
     _segmentImageView.image = [UIImage imageNamed:@"tab_bg"];
     _segmentImageView.userInteractionEnabled = YES;
     _segmentImageView.indexChangedDelegate = self;
@@ -94,21 +97,14 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 - (void)layoutSubviews {
   CGSize pageControlSize = [self.pageControl sizeForNumberOfPages:3];
   NSUInteger numberOfPages = [self numberOfPagesForCategory:self.category
-                                              inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - CGRectGetHeight(_segmentImageView.bounds) - pageControlSize.height)];
+                                              inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - kBarHeight - pageControlSize.height)];
 
   NSInteger currentPage = (self.pageControl.currentPage > numberOfPages) ? numberOfPages : self.pageControl.currentPage;
-
-// if (currentPage > numberOfPages) it is set implicitly to max pageNumber available
   self.pageControl.numberOfPages = numberOfPages;
   pageControlSize = [self.pageControl sizeForNumberOfPages:numberOfPages];
-  self.pageControl.frame = CGRectIntegral(CGRectMake((CGRectGetWidth(self.bounds) - pageControlSize.width) / 2,
-                                                   CGRectGetHeight(self.bounds) - pageControlSize.height,
+  self.pageControl.frame = CGRectIntegral(CGRectMake((CGRectGetWidth(self.bounds) - pageControlSize.width) / 2,0,
                                                    pageControlSize.width,
                                                    pageControlSize.height));
-  
-  
-  self.pageControl.currentPageIndicatorTintColor = [UIColor darkGrayColor];
-  self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
 
   self.scrollView.frame = CGRectMake(0,CGRectGetHeight(self.pageControl.bounds),CGRectGetWidth(self.bounds),
                                    CGRectGetHeight(self.bounds) - kBarHeight - pageControlSize.height);
@@ -118,10 +114,6 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
   [self purgePageViews];
   self.pageViews = [NSMutableArray array];
   [self setPage:currentPage];
-  NSLog(@"self==:%@",NSStringFromCGRect(self.bounds));
-  NSLog(@"scroll==:%@",NSStringFromCGRect(self.scrollView.frame));
-  NSLog(@"page==:%@",NSStringFromCGRect(self.pageControl.frame));
-  NSLog(@"seg==:%@",NSStringFromCGRect(self.segmentImageView.frame));
 }
 
 #pragma mark - Setter And Getter Methods
@@ -325,11 +317,28 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 }
 
 - (NSUInteger)numberOfPagesForCategory:(NSString *)category inFrameSize:(CGSize)frameSize {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    _recentLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.bounds) - RecentLabelWidth)/2, 0, RecentLabelWidth,37)];
+    _recentLabel.backgroundColor = [UIColor clearColor];
+    _recentLabel.font = [UIFont systemFontOfSize:RecentLabelFontSize];
+    _recentLabel.textColor = [UIColor lightGrayColor];
+    _recentLabel.textAlignment = NSTextAlignmentCenter;
+    _recentLabel.text = @"最近使用的类别";
+  });
   
   if ([category isEqualToString:segmentRecentName]) {
-    return 1;
+    if ([self.subviews containsObject:_recentLabel]) {
+      return 1;
+    }else{
+      [self addSubview:_recentLabel];
+      return 1;
+    }
+    
   }
-  
+  if ([self.subviews containsObject:_recentLabel]) {
+    [_recentLabel removeFromSuperview];
+  }
   NSUInteger emojiCount = [[self emojiListForCategory:category] count];
   NSUInteger numberOfRows = [self numberOfRowsForFrameSize:frameSize];
   NSUInteger numberOfColumns = [self numberOfColumnsForFrameSize:frameSize];
