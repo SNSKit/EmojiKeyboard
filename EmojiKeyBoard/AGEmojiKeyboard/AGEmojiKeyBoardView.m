@@ -77,26 +77,26 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     UIImage *leftCornerImage = [UIImage imageNamed:@"corner_left"];
     UIImage *rightCornerImage = [UIImage imageNamed:@"corner_right"];
     CGRect frame = CGRectMake(0, CGRectGetHeight(self.pageControl.bounds) + CGRectGetHeight(self.scrollView.bounds), CGRectGetWidth(self.bounds), kBarHeight);
-    _segmentImageView = [[CustomImageView alloc] initWithFrame:frame
+    self.segmentImageView = [[CustomImageView alloc] initWithFrame:frame
                                             buttonNormalImages:[self imagesForNonSelectedSegments]
                                           buttonSelectedImages:[self imagesForSelectedSegments]
                                                leftCornerImage:leftCornerImage
                                               rightCornerImage:rightCornerImage
                                                       delegate:self];
     
-    _segmentImageView.image = [UIImage imageNamed:@"tab_bg"];
-    _segmentImageView.userInteractionEnabled = YES;
-    _segmentImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.segmentImageView.image = [UIImage imageNamed:@"tab_bg"];
+    self.segmentImageView.userInteractionEnabled = YES;
     
-    [self addSubview:_segmentImageView];
+    [self addSubview:self.segmentImageView];
   }
+//  NSLog(@"init");
   return self;
 }
 
 - (void)layoutSubviews {
   CGSize pageControlSize = [self.pageControl sizeForNumberOfPages:3];
   NSUInteger numberOfPages = [self numberOfPagesForCategory:self.category
-                                              inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - CGRectGetHeight(_segmentImageView.bounds) - pageControlSize.height)];
+                                              inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - CGRectGetHeight(self.segmentImageView.bounds) - pageControlSize.height)];
 
   NSInteger currentPage = (self.pageControl.currentPage > numberOfPages) ? numberOfPages : self.pageControl.currentPage;
   self.pageControl.numberOfPages = numberOfPages;
@@ -106,13 +106,14 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
                                                    pageControlSize.height));
 
   self.scrollView.frame = CGRectMake(0,CGRectGetHeight(self.pageControl.bounds),CGRectGetWidth(self.bounds),
-                                   CGRectGetHeight(self.bounds) - CGRectGetHeight(_segmentImageView.bounds) - pageControlSize.height);
+                                   CGRectGetHeight(self.bounds) - CGRectGetHeight(self.segmentImageView.bounds) - pageControlSize.height);
   [self.scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
   self.scrollView.contentOffset = CGPointMake(CGRectGetWidth(self.scrollView.bounds) * currentPage, 0);
   self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.scrollView.bounds) * numberOfPages, CGRectGetHeight(self.scrollView.bounds));
   [self purgePageViews];
   self.pageViews = [NSMutableArray array];
   [self setPage:currentPage];
+//  NSLog(@"layout");
 }
 
 #pragma mark - Setter And Getter Methods
@@ -280,7 +281,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
   NSMutableArray *buttonTexts = [self emojiTextsForCategory:self.category
                                                   fromIndex:startingIndex
                                                     toIndex:endingIndex];
-  NSLog(@"Setting page at index %@", @( index ));
+//  NSLog(@"Setting page at index %@", @( index ));
   [pageView setButtonTexts:buttonTexts];
   pageView.frame = CGRectMake(index * CGRectGetWidth(scrollView.bounds), 0, CGRectGetWidth(scrollView.bounds), CGRectGetHeight(scrollView.bounds));
 }
@@ -341,7 +342,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
   NSUInteger numberOfEmojisOnAPage = numberOfRows * numberOfColumns;
   //ceil:返回不小于给定实数的最小整数
   NSUInteger numberOfPages = (NSUInteger)ceil((float)emojiCount / numberOfEmojisOnAPage);
-  NSLog(@"%@ %@ %@ :: %@", @( numberOfRows ), @( numberOfColumns ), @( emojiCount ), @( numberOfPages ));
+//  NSLog(@"%@ %@ %@ :: %@", @( numberOfRows ), @( numberOfColumns ), @( emojiCount ), @( numberOfPages ));
   return numberOfPages;
 }
 
