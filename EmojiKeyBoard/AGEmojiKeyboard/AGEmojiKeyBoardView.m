@@ -76,12 +76,10 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     
     UIImage *leftCornerImage = [UIImage imageNamed:@"corner_left"];
     UIImage *rightCornerImage = [UIImage imageNamed:@"corner_right"];
-    NSArray *buttonNormalImages = @[@"recent_n",@"face_n",@"bell_n",@"flower_n",@"car_n",@"characters_n",@"backspace_n"];
-    NSArray *buttonSelectedImages = @[@"recent_s",@"face_s",@"bell_s",@"flower_s",@"car_s",@"characters_s"];
     CGRect frame = CGRectMake(0, CGRectGetHeight(self.pageControl.bounds) + CGRectGetHeight(self.scrollView.bounds), CGRectGetWidth(self.bounds), kBarHeight);
     _segmentImageView = [[CustomImageView alloc] initWithFrame:frame
-                                            buttonNormalImages:buttonNormalImages
-                                          buttonSelectedImages:buttonSelectedImages
+                                            buttonNormalImages:[self imagesForNonSelectedSegments]
+                                          buttonSelectedImages:[self imagesForSelectedSegments]
                                                leftCornerImage:leftCornerImage
                                               rightCornerImage:rightCornerImage
                                                       delegate:self];
@@ -171,6 +169,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
          ++i) {
       [array addObject:[self.dataSource emojiKeyboardView:self imageForNonSelectedCategory:i]];
     }
+    [array addObject:[UIImage imageNamed:@"backspace_n"]];
   });
   return array;
 }

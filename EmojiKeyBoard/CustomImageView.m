@@ -56,13 +56,11 @@
             
             _leftImageView = [[UIImageView alloc]initWithFrame:CGRectZero];
             [self addSubview:_leftImageView];
-            
-            NSString *imgName = _buttonSelectedImages[0];
-            [btn setImage:[UIImage imageNamed:imgName] forState:UIControlStateNormal];
+            [btn setImage:_buttonSelectedImages[0] forState:UIControlStateNormal];
             [self showSeperatorAtIndex:i + 1];
         }
         else{
-            [btn setImage:[UIImage imageNamed:imageArray[i]] forState:UIControlStateNormal];
+            [btn setImage:imageArray[i] forState:UIControlStateNormal];
         }
         btn.tag = i + 1;
         if (i == imageArray.count - 1) {
@@ -101,7 +99,7 @@
 - (void)setSegButtonAtIndex:(NSUInteger)index isSelected:(BOOL)isSelected{
     if (isSelected) {
         UIButton *btn = (UIButton *)[self viewWithTag:index];
-        [btn setImage:[UIImage imageNamed:_buttonSelectedImages[index - 1]] forState:UIControlStateNormal];
+        [btn setImage:_buttonSelectedImages[index - 1] forState:UIControlStateNormal];
         
         _leftImageView.frame = CGRectMake(0, 0, (index - 1) * kButtonGap, kBarHeight);
         UIEdgeInsets leftInset = UIEdgeInsetsMake(0,0,0,8);
@@ -117,7 +115,7 @@
         }
     }else{
         UIButton *btn = (UIButton *)[self viewWithTag:index];
-        [btn setImage:[UIImage imageNamed:_buttonNormalImages[index - 1]] forState:UIControlStateNormal];
+        [btn setImage:_buttonNormalImages[index - 1] forState:UIControlStateNormal];
     }
 }
 
