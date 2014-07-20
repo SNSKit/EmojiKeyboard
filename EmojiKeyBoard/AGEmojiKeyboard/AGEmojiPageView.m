@@ -8,7 +8,7 @@
 
 #import "AGEmojiPageView.h"
 
-#define BACKSPACE_BUTTON_TAG 10
+//#define BACKSPACE_BUTTON_TAG 10
 #define BUTTON_FONT_SIZE 32
 
 @interface AGEmojiPageView ()
@@ -55,14 +55,6 @@
   [self.buttons addObject:button];
   [self addSubview:button];
 }
-
-// Padding is the expected space between two buttons.
-// Thus, space of top button = padding / 2
-// extra padding according to particular button's pos = pos * padding
-// Margin includes, size of buttons in between = pos * buttonSize
-// Thus, margin = padding / 2
-//                + pos * padding
-//                + pos * buttonSize
 
 - (CGFloat)XMarginForButtonInColumn:(NSInteger)column {
   CGFloat padding = ((CGRectGetWidth(self.bounds) - self.columns * self.buttonSize.width) / self.columns);

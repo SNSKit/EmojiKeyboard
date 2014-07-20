@@ -12,18 +12,34 @@
 
 @property (nonatomic,strong) UIImageView *leftImageView;
 @property (nonatomic,strong) UIImageView *rightImageView;
+@property (nonatomic,strong) NSArray *buttonNormalImages;
+@property (nonatomic,strong) NSArray *buttonSelectedImages;
+@property (nonatomic,strong) UIImage *leftCornerImage;
+@property (nonatomic,strong) UIImage *rightCornerImage;
+@property (nonatomic,assign) NSUInteger selectedIndex;
 
 @end
 
 @implementation CustomImageView
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
+           buttonNormalImages:(NSArray *)imageArrary
+         buttonSelectedImages:(NSArray *)selectedImageArray
+              leftCornerImage:(UIImage *)left
+             rightCornerImage:(UIImage *)right
+                     delegate:(id<ButtonIndexChangedDelegate>)indexChangedDelegate
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        
-    }
-    return self;
+  self = [super initWithFrame:frame];
+  if (self) {
+    _buttonNormalImages = imageArrary;
+    _buttonSelectedImages = selectedImageArray;
+    _leftCornerImage = left;
+    _rightCornerImage = right;
+    _selectedIndex = 1;
+    _indexChangedDelegate = indexChangedDelegate;
+    [self initButtonsWithImageArray:_buttonNormalImages];
+  }
+  return self;
 }
 
 - (void)initButtonsWithImageArray:(NSArray *)imageArray{

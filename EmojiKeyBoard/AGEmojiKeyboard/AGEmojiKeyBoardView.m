@@ -28,7 +28,6 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 @property (nonatomic) NSString *category;
 
 @property (nonatomic,strong)UILabel *recentLabel;
-
 @property (nonatomic,strong) CustomImageView *segmentImageView;
 
 @end
@@ -74,16 +73,21 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.delegate = self;
     [self addSubview:self.scrollView];
-    _segmentImageView = [[CustomImageView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.pageControl.bounds) + CGRectGetHeight(self.scrollView.bounds), CGRectGetWidth(self.bounds), kBarHeight)];
+    
+    UIImage *leftCornerImage = [UIImage imageNamed:@"corner_left"];
+    UIImage *rightCornerImage = [UIImage imageNamed:@"corner_right"];
+    NSArray *buttonNormalImages = @[@"recent_n",@"face_n",@"bell_n",@"flower_n",@"car_n",@"characters_n",@"backspace_n"];
+    NSArray *buttonSelectedImages = @[@"recent_s",@"face_s",@"bell_s",@"flower_s",@"car_s",@"characters_s"];
+    CGRect frame = CGRectMake(0, CGRectGetHeight(self.pageControl.bounds) + CGRectGetHeight(self.scrollView.bounds), CGRectGetWidth(self.bounds), kBarHeight);
+    _segmentImageView = [[CustomImageView alloc] initWithFrame:frame
+                                            buttonNormalImages:buttonNormalImages
+                                          buttonSelectedImages:buttonSelectedImages
+                                               leftCornerImage:leftCornerImage
+                                              rightCornerImage:rightCornerImage
+                                                      delegate:self];
+    
     _segmentImageView.image = [UIImage imageNamed:@"tab_bg"];
     _segmentImageView.userInteractionEnabled = YES;
-    _segmentImageView.indexChangedDelegate = self;
-    _segmentImageView.selectedIndex = 1;
-    _segmentImageView.leftCornerImage = [UIImage imageNamed:@"corner_left"];
-    _segmentImageView.rightCornerImage = [UIImage imageNamed:@"corner_right"];
-    _segmentImageView.buttonNormalImages = @[@"recent_n",@"face_n",@"bell_n",@"flower_n",@"car_n",@"characters_n",@"backspace_n"];
-    _segmentImageView.buttonSelectedImages = @[@"recent_s",@"face_s",@"bell_s",@"flower_s",@"car_s",@"characters_s"];
-    [_segmentImageView initButtonsWithImageArray:_segmentImageView.buttonNormalImages];
     _segmentImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     [self addSubview:_segmentImageView];

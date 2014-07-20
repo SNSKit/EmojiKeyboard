@@ -26,13 +26,13 @@
 @interface CustomImageView : UIImageView
 
 @property (nonatomic,strong) UIImage *seperatorImage;
-@property (nonatomic,strong) NSArray *buttonNormalImages;
-@property (nonatomic,strong) NSArray *buttonSelectedImages;
-@property (nonatomic,strong) UIImage *leftCornerImage;
-@property (nonatomic,strong) UIImage *rightCornerImage;
-@property (nonatomic,assign) NSUInteger selectedIndex;
 @property (nonatomic,weak) id<ButtonIndexChangedDelegate>indexChangedDelegate;
 
-- (void)initButtonsWithImageArray:(NSArray *)imageArray;
+- (instancetype)initWithFrame:(CGRect)frame
+           buttonNormalImages:(NSArray *)imageArrary
+         buttonSelectedImages:(NSArray *)selectedImageArray
+              leftCornerImage:(UIImage *)left
+             rightCornerImage:(UIImage *)right
+                     delegate:(id<ButtonIndexChangedDelegate>)indexChangedDelegate;
 
 @end
