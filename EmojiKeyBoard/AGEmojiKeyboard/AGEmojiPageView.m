@@ -17,8 +17,12 @@
 @property (nonatomic) NSMutableArray *buttons;
 @property (nonatomic) NSUInteger columns;
 @property (nonatomic) NSUInteger rows;
-@property (nonatomic) UIImage *backSpaceButtonImage;
+
+@property (nonatomic,strong) NSArray *emojiArray;
+@property (nonatomic,assign) NSInteger index;
 @property (nonatomic,strong) UILongPressGestureRecognizer *longPress;
+@property (nonatomic,strong) UIImageView *zoomImageView;
+@property (nonatomic,strong) UILabel *emojiLabel;
 
 @end
 
@@ -28,23 +32,24 @@
          buttonSize:(CGSize)buttonSize
                rows:(NSUInteger)rows
             columns:(NSUInteger)columns {
-  self = [super initWithFrame:frame];
-  if (self) {
-    _buttonSize = buttonSize;
-    _columns = columns;
-    _rows = rows;
-    _buttons = [[NSMutableArray alloc] initWithCapacity:rows * columns];
-    _longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longpressHandler:)];
-      self.userInteractionEnabled = YES;
-      [self addGestureRecognizer:_longPress];
-      _longPress.minimumPressDuration = 0.20f;
-  }
-  return self;
+    self = [super initWithFrame:frame];
+    if (self) {
+        _buttonSize = buttonSize;
+        _columns = columns;
+        _rows = rows;
+        _buttons = [[NSMutableArray alloc] initWithCapacity:rows * columns];
+        _longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longpressHandler:)];
+        self.userInteractionEnabled = YES;
+        [self addGestureRecognizer:_longPress];
+        _longPress.minimumPressDuration = 0.20f;
+    }
+    return self;
 }
 
 - (void)setButtonTexts:(NSMutableArray *)buttonTexts {
     
     NSAssert(buttonTexts != nil, @"Array containing texts to be set on buttons is nil");
+    _emojiArray = buttonTexts;
     
     if (([self.buttons count] - 1) == [buttonTexts count]) {
         // just reset text on each button
@@ -96,37 +101,52 @@
     return button;
 }
 
-
 - (void)emojiButtonPressed:(UIButton *)button {
-  [self.delegate emojiPageView:self didUseEmoji:button.titleLabel.text];
+    [self.delegate emojiPageView:self didUseEmoji:button.titleLabel.text];
 }
 
 - (void)longpressHandler:(UILongPressGestureRecognizer *)longGesture{
-    
-    
-    if(longGesture.state == UIGestureRecognizerStateBegan)
-    {
-        CGPoint point = [longGesture locationInView:self];
-        NSLog(@"%@",NSStringFromCGPoint(point));
-    }
     CGPoint point = [longGesture locationInView:self];
-    NSLog(@"%@",NSStringFromCGPoint(point));
-    
+    if (longGesture.state == UIGestureRecognizerStateBegan) {
+        int x = point.x / ButtonWidth;
+        int y = point.y / ButtonHeight;
+        _index = x + y * _columns;
+        [self showImageViewWithAtXIndex:x yIndex:y image:[UIImage imageNamed:@"emoji_touch"]];
+    }else if (longGesture.state == UIGestureRecognizerStateChanged){
+        int x = point.x / ButtonWidth;
+        int y = point.y / ButtonHeight;
+        if (_index != x + y * _columns) {
+            _index = x + y * _columns;
+            [self showImageViewWithAtXIndex:x yIndex:y image:[UIImage imageNamed:@"emoji_touch"]];
+        }
+    }else if (longGesture.state == UIGestureRecognizerStateEnded){
+        if(_index < 0)
+            return;
+        
+        _zoomImageView.hidden = YES;
+        [self.delegate emojiPageView:self didUseEmoji:_emojiLabel.text];
+        _index = -1;
+    }
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    UITouch* touch = [[event allTouches] anyObject];
-    NSLog(@"begin:%@",NSStringFromCGPoint([touch locationInView:self]));
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    UITouch* touch = [[event allTouches] anyObject];
-    NSLog(@"move:%@",NSStringFromCGPoint([touch locationInView:self]));
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    UITouch* touch = [[event allTouches] anyObject];
-    NSLog(@"end:%@",NSStringFromCGPoint([touch locationInView:self]));
+- (void)showImageViewWithAtXIndex:(NSUInteger)xIndex yIndex:(NSUInteger)yIndex image:(UIImage *)image {
+    if (_index >= 0 && _index < _emojiArray.count) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            _zoomImageView = [[UIImageView alloc] initWithImage:image];
+            _zoomImageView.frame = CGRectMake(0, 0, 60, 83);
+            _emojiLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 8, 50, 50)];
+            _emojiLabel.font = [UIFont fontWithName:@"Apple color emoji" size:40];
+            _emojiLabel.textAlignment = NSTextAlignmentCenter;
+            [_zoomImageView addSubview:_emojiLabel];
+            _zoomImageView.hidden = YES;
+            self.clipsToBounds = NO;
+            [self addSubview:_zoomImageView];
+        });
+        _zoomImageView.frame = CGRectMake([self XMarginForButtonInColumn:xIndex] - 20, [self YMarginForButtonInRow:yIndex - 1] - 20, 82, 111);
+        _zoomImageView.hidden = NO;
+        _emojiLabel.text = _emojiArray[xIndex + yIndex * _columns];
+    }
 }
 
 @end

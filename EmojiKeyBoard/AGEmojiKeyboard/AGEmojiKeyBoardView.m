@@ -10,8 +10,7 @@
 #import "CustomImageView.h"
 
 #define kBarHeight  35
-static const CGFloat ButtonWidth = 45;
-static const CGFloat ButtonHeight = 45;
+
 static const NSUInteger DefaultRecentEmojisMaintainedCount = 50;
 static const CGFloat RecentLabelWidth = 150;
 static const CGFloat RecentLabelFontSize = 12.0;
@@ -75,18 +74,18 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     
     UIImage *leftCornerImage = [UIImage imageNamed:@"corner_left"];
     UIImage *rightCornerImage = [UIImage imageNamed:@"corner_right"];
-    CGRect frame = CGRectMake(0, CGRectGetHeight(self.pageControl.bounds) + CGRectGetHeight(self.scrollView.bounds), CGRectGetWidth(self.bounds), kBarHeight);
-    self.segmentImageView = [[CustomImageView alloc] initWithFrame:frame
+    CGRect frame = CGRectMake(0, CGRectGetHeight(self.bounds) - kBarHeight, CGRectGetWidth(self.bounds), kBarHeight);
+    _segmentImageView = [[CustomImageView alloc] initWithFrame:frame
                                             buttonNormalImages:[self imagesForNonSelectedSegments]
                                           buttonSelectedImages:[self imagesForSelectedSegments]
                                                leftCornerImage:leftCornerImage
                                               rightCornerImage:rightCornerImage
                                                       delegate:self];
     
-    self.segmentImageView.image = [UIImage imageNamed:@"tab_bg"];
-    self.segmentImageView.userInteractionEnabled = YES;
-    
-    [self addSubview:self.segmentImageView];
+    _segmentImageView.image = [UIImage imageNamed:@"tab_bg"];
+    _segmentImageView.userInteractionEnabled = YES;
+    _segmentImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    [self addSubview:_segmentImageView];
   }
 //  NSLog(@"init");
   return self;

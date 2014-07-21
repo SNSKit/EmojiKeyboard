@@ -10,6 +10,8 @@
 
 #import <UIKit/UIKit.h>
 
+static const CGFloat ButtonWidth = 45;
+static const CGFloat ButtonHeight = 45;
 
 typedef NS_ENUM(NSInteger, AGEmojiKeyboardViewCategoryImage) {
   AGEmojiKeyboardViewCategoryImageRecent,
