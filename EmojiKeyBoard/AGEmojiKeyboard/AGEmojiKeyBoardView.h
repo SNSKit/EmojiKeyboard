@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, AGEmojiKeyboardViewCategoryImage) {
 
 @property (nonatomic, weak) id<AGEmojiKeyboardViewDelegate> delegate;
 @property (nonatomic, weak) id<AGEmojiKeyboardViewDataSource> dataSource;
+@property (nonatomic, strong) UIScrollView *scrollView;
 
 /**
  @param frame Frame of the view to be initialised with.

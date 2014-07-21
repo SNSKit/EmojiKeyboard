@@ -23,7 +23,6 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 @interface AGEmojiKeyboardView () <UIScrollViewDelegate, AGEmojiPageViewDelegate ,ButtonIndexChangedDelegate>
 
 @property (nonatomic) UIPageControl *pageControl;
-@property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSDictionary *emojis;
 @property (nonatomic) NSMutableArray *pageViews;
 @property (nonatomic) NSString *category;
@@ -94,7 +93,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 
 - (void)layoutSubviews {
     
-    [super layoutSubviews];
+  [super layoutSubviews];
   CGSize pageControlSize = [self.pageControl sizeForNumberOfPages:3];
   NSUInteger numberOfPages = [self numberOfPagesForCategory:self.category
                                               inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - CGRectGetHeight(_segmentImageView.bounds) - pageControlSize.height)];
