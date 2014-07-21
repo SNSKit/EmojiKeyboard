@@ -26,7 +26,6 @@
   self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
   AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
   emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    NSLog(@"emoji:%@",NSStringFromCGRect(emojiKeyboardView.frame));
   emojiKeyboardView.delegate = self;
   [self.view addSubview:self.textView];
   self.textView.inputView = emojiKeyboardView;
@@ -39,6 +38,7 @@
 
 - (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)emojiKeyBoardView {
   [self.textView deleteBackward];
+
 }
 
 - (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)emojiKeyboardView imageForSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
