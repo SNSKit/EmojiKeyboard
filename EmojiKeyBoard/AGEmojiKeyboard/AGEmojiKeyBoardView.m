@@ -9,8 +9,9 @@
 #import "AGEmojiPageView.h"
 #import "CustomImageView.h"
 
+#define kBarHeight  35
 static const CGFloat ButtonWidth = 45;
-static const CGFloat ButtonHeight = 50;
+static const CGFloat ButtonHeight = 45;
 static const NSUInteger DefaultRecentEmojisMaintainedCount = 50;
 static const CGFloat RecentLabelWidth = 150;
 static const CGFloat RecentLabelFontSize = 12.0;
@@ -22,7 +23,6 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 @interface AGEmojiKeyboardView () <UIScrollViewDelegate, AGEmojiPageViewDelegate ,ButtonIndexChangedDelegate>
 
 @property (nonatomic) UIPageControl *pageControl;
-@property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) NSDictionary *emojis;
 @property (nonatomic) NSMutableArray *pageViews;
 @property (nonatomic) NSString *category;
@@ -39,11 +39,9 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 - (instancetype)initWithFrame:(CGRect)frame dataSource:(id<AGEmojiKeyboardViewDataSource>)dataSource {
   self = [super initWithFrame:frame];
   if (self) {
-    self.backgroundColor = [UIColor colorWithRed:(float)240/255 green:(float)240/255 blue:(float)240/255 alpha:1.0];
     _dataSource = dataSource;
-    
     self.category = [self categoryNameAtIndex:self.defaultSelectedCategory];
-      
+    self.backgroundColor = [UIColor colorWithRed:(float)248/255 green:(float)248/255 blue:(float)248/255 alpha:1.0];
     self.pageControl = [[UIPageControl alloc] init];
     self.pageControl.hidesForSinglePage = YES;
     self.pageControl.currentPage = 0;
@@ -74,6 +72,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     self.scrollView.delegate = self;
     [self addSubview:self.scrollView];
     
+    
     UIImage *leftCornerImage = [UIImage imageNamed:@"corner_left"];
     UIImage *rightCornerImage = [UIImage imageNamed:@"corner_right"];
     CGRect frame = CGRectMake(0, CGRectGetHeight(self.pageControl.bounds) + CGRectGetHeight(self.scrollView.bounds), CGRectGetWidth(self.bounds), kBarHeight);
@@ -94,6 +93,8 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 }
 
 - (void)layoutSubviews {
+    
+  [super layoutSubviews];
   CGSize pageControlSize = [self.pageControl sizeForNumberOfPages:3];
   NSUInteger numberOfPages = [self numberOfPagesForCategory:self.category
                                               inFrameSize:CGSizeMake(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds) - CGRectGetHeight(self.segmentImageView.bounds) - pageControlSize.height)];

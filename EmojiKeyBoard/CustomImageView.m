@@ -1,12 +1,22 @@
 //
-//  CustomImageView.m
-//  Test
+//  CustomImageView.h
+//  EmojiKeyBoard
 //
-//  Created by wang on 14-7-19.
-//  Copyright (c) 2014年 linptech. All rights reserved.
+//  Created by WangMac on 14-7-19.
+//  Copyright (c) 2014年 Meitu. All rights reserved.
 //
 
 #import "CustomImageView.h"
+
+#define kButtonGap 45
+#define kSeperatorGap 45
+#define kLeftMargin 5
+#define kButtonWidth 30
+#define kSeperatorWidth 8
+#define kScreenWidth [UIScreen mainScreen].bounds.size.width
+#define kImageViewOffsetX 4
+#define kLeftSeperatorOffsetX 6
+#define kRightSeperatorOffsetX 2
 
 @interface CustomImageView()
 
@@ -46,9 +56,9 @@
     
     for (int i = 0; i < imageArray.count; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(kLeftMargin + kButtonGap * i, 0, kButtonWidth, kBarHeight);
+        btn.frame = CGRectMake(kLeftMargin + kButtonGap * i, 0, kButtonWidth, CGRectGetHeight(self.bounds));
         if (i == 0) {
-            _rightImageView = [[UIImageView alloc] initWithFrame:CGRectMake(kButtonGap, 0, kScreenWidth - kButtonGap, kBarHeight)];
+            _rightImageView = [[UIImageView alloc] initWithFrame:CGRectMake(kButtonGap - kImageViewOffsetX, 0, kScreenWidth - kButtonGap + kImageViewOffsetX, CGRectGetHeight(self.bounds))];
             UIEdgeInsets rightInset = UIEdgeInsetsMake(0,8,0,0);
             UIImage *iamge = [_rightCornerImage resizableImageWithCapInsets:rightInset resizingMode:UIImageResizingModeStretch];
             _rightImageView.image = iamge;
@@ -65,6 +75,7 @@
         btn.tag = i + 1;
         if (i == imageArray.count - 1) {
             [btn addTarget:self action:@selector(backspacePressed) forControlEvents:UIControlEventTouchDown];
+            btn.frame = CGRectMake(kLeftMargin + kButtonGap * i, 0, 40, CGRectGetHeight(self.bounds));
         }else{
             [btn addTarget:self action:@selector(segButtonChanged:) forControlEvents:UIControlEventTouchDown];
         }
@@ -101,12 +112,12 @@
         UIButton *btn = (UIButton *)[self viewWithTag:index];
         [btn setImage:_buttonSelectedImages[index - 1] forState:UIControlStateNormal];
         
-        _leftImageView.frame = CGRectMake(0, 0, (index - 1) * kButtonGap, kBarHeight);
+        _leftImageView.frame = CGRectMake(0, 0, (index - 1) * kButtonGap - 1, CGRectGetHeight(self.bounds));
         UIEdgeInsets leftInset = UIEdgeInsetsMake(0,0,0,8);
         UIImage *leftIamge = [_leftCornerImage resizableImageWithCapInsets:leftInset resizingMode:UIImageResizingModeStretch];
         _leftImageView.image = leftIamge;
         
-        _rightImageView.frame = CGRectMake(kButtonGap + (index - 1) * kButtonGap, 0, kScreenWidth - kButtonGap + (index - 1) * kButtonGap, kBarHeight);
+        _rightImageView.frame = CGRectMake(kButtonGap + (index - 1) * kButtonGap - kImageViewOffsetX, 0, kScreenWidth - kButtonGap + (index - 1) * kButtonGap + kImageViewOffsetX, CGRectGetHeight(self.bounds));
         UIEdgeInsets rightInset = UIEdgeInsetsMake(0,8,0,0);
         UIImage *rightIamge = [_rightCornerImage resizableImageWithCapInsets:rightInset resizingMode:UIImageResizingModeStretch];
         _rightImageView.image = rightIamge;
@@ -126,7 +137,7 @@
         case 1:
             //左0右5
             for (int i = 0; i < 5; i++) {
-                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1), 0, 8, kBarHeight)];
+                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1) - kRightSeperatorOffsetX, 0, 8, CGRectGetHeight(self.bounds))];
                 seperator.image = [UIImage imageNamed:@"icons_bg_separator"];
                 [_rightImageView addSubview:seperator];
             }
@@ -134,7 +145,7 @@
         case 2:
             //左0右4
             for (int i = 0; i < 4; i++) {
-                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1), 0, 8, kBarHeight)];
+                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1) - kRightSeperatorOffsetX, 0, 8, CGRectGetHeight(self.bounds))];
                 seperator.image = [UIImage imageNamed:@"icons_bg_separator"];
                 [_rightImageView addSubview:seperator];
             }
@@ -142,12 +153,12 @@
         case 3:
             //左1右3
         {
-            for (int i = 0; i < 2; i++) {
-                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1), 0, 8, kBarHeight)];
+            for (int i = 0; i < 3; i++) {
+                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1) - kRightSeperatorOffsetX, 0, 8, CGRectGetHeight(self.bounds))];
                 seperator.image = [UIImage imageNamed:@"icons_bg_separator"];
                 [_rightImageView addSubview:seperator];
             }
-            UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap, 0, 8, kBarHeight)];
+            UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap - kLeftSeperatorOffsetX, 0, 8, CGRectGetHeight(self.bounds))];
             seperator.image = [UIImage imageNamed:@"icons_bg_separator"];
             [_leftImageView addSubview:seperator];
         }
@@ -156,12 +167,12 @@
             //左2右2
         {
             for (int i = 0; i < 2; i++) {
-                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1), 0, 8, kBarHeight)];
+                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1) - kRightSeperatorOffsetX, 0, 8, CGRectGetHeight(self.bounds))];
                 seperator.image = [UIImage imageNamed:@"icons_bg_separator"];
                 [_rightImageView addSubview:seperator];
             }
             for (int i = 0; i < 2; i++) {
-                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1), 0, 8, kBarHeight)];
+                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1) - kLeftSeperatorOffsetX, 0, 8, CGRectGetHeight(self.bounds))];
                 seperator.image = [UIImage imageNamed:@"icons_bg_separator"];
                 [_leftImageView addSubview:seperator];
             }
@@ -171,11 +182,11 @@
             //左3右1
         {
             for (int i = 0; i < 3; i++) {
-                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1), 0, 8, kBarHeight)];
+                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1) - kLeftSeperatorOffsetX, 0, 8, CGRectGetHeight(self.bounds))];
                 seperator.image = [UIImage imageNamed:@"icons_bg_separator"];
                 [_leftImageView addSubview:seperator];
             }
-            UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap, 0, 8, kBarHeight)];
+            UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap - kRightSeperatorOffsetX, 0, 8, CGRectGetHeight(self.bounds))];
             seperator.image = [UIImage imageNamed:@"icons_bg_separator"];
             [_rightImageView addSubview:seperator];
         }
@@ -183,7 +194,7 @@
         case 6:
             //左4右0
             for (int i = 0; i < 4; i++) {
-                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1), 0, 8, kBarHeight)];
+                UIImageView *seperator = [[UIImageView alloc] initWithFrame:CGRectMake(kSeperatorGap * (i + 1) - kLeftSeperatorOffsetX, 0, 8, CGRectGetHeight(self.bounds))];
                 seperator.image = [UIImage imageNamed:@"icons_bg_separator"];
                 [_leftImageView addSubview:seperator];
             }
