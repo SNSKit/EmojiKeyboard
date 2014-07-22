@@ -38,7 +38,8 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 - (instancetype)initWithFrame:(CGRect)frame dataSource:(id<AGEmojiKeyboardViewDataSource>)dataSource {
   self = [super initWithFrame:frame];
   if (self) {
-    _dataSource = dataSource;
+      self.clipsToBounds = NO;
+      _dataSource = dataSource;
     self.category = [self categoryNameAtIndex:self.defaultSelectedCategory];
     self.backgroundColor = [UIColor colorWithRed:(float)248/255 green:(float)248/255 blue:(float)248/255 alpha:1.0];
     self.pageControl = [[UIPageControl alloc] init];
@@ -69,6 +70,7 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.delegate = self;
+      self.scrollView.clipsToBounds = NO;
     [self addSubview:self.scrollView];
     
     
