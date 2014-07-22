@@ -41,7 +41,7 @@
         _longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longpressHandler:)];
         self.userInteractionEnabled = YES;
         [self addGestureRecognizer:_longPress];
-        _longPress.minimumPressDuration = 0.20f;
+        _longPress.minimumPressDuration = 0.05f;
         
         
     }
@@ -109,12 +109,14 @@
 
 - (void)longpressHandler:(UILongPressGestureRecognizer *)longGesture{
     CGPoint point = [longGesture locationInView:self];
-    int x = point.x / ButtonWidth;
-    int y = point.y / ButtonHeight;
     if (longGesture.state == UIGestureRecognizerStateBegan) {
+        int x = point.x / ButtonWidth;
+        int y = point.y / ButtonHeight;
         _index = x + y * _columns;
         [self showImageViewWithAtXIndex:x yIndex:y image:[UIImage imageNamed:@"emoji_touch"]];
     }else if (longGesture.state == UIGestureRecognizerStateChanged){
+        int x = point.x / ButtonWidth;
+        int y = point.y / ButtonHeight;
         if (_index != x + y * _columns) {
             _index = x + y * _columns;
             if(_index < 0 || _index >= _emojiArray.count){
@@ -145,6 +147,8 @@
             [_zoomImageView addSubview:_emojiLabel];
             _zoomImageView.hidden = YES;
             self.clipsToBounds = NO;
+        }
+        if (![self.subviews containsObject:_zoomImageView]) {
             [self addSubview:_zoomImageView];
         }
         _zoomImageView.frame = CGRectMake([self XMarginForButtonInColumn:xIndex] - 15, [self YMarginForButtonInRow:yIndex - 1] - 20, 77, 111);
